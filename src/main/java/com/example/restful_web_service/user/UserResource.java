@@ -1,6 +1,9 @@
 package com.example.restful_web_service.user;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.hateoas.EntityModel;
 import com.example.restful_web_service.exception.UserNotFoundException;
 import jakarta.validation.Valid;
@@ -12,12 +15,25 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 public class UserResource {
 
     @Autowired
     private UserDaoService userService;
+    @Autowired
+    private MessageSource messageSource;
+
+    @GetMapping(value = "/get-message")
+    /* public String getMessage(@RequestHeader(name = "Accept-language", required = false) Locale locale) {
+        System.out.println(locale);
+        return messageSource.getMessage("good.morning.message", null, locale);
+    } */
+    public String getMessage() {
+        System.out.println(LocaleContextHolder.getLocale());
+        return messageSource.getMessage("good.morning.message", null, LocaleContextHolder.getLocale());
+    }
 
     @GetMapping(value = "/users")
     public List<User> retrieveAllUsers() {
