@@ -1,5 +1,7 @@
 package com.example.restful_web_service.user;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import jakarta.validation.constraints.Past;
@@ -7,6 +9,7 @@ import jakarta.validation.constraints.Size;
 
 import java.util.Date;
 @Schema(description = "All Details about the user")
+//@JsonFilter("userFilter")
 public class User {
 
     private Integer id;

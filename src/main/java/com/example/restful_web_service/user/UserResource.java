@@ -2,6 +2,9 @@ package com.example.restful_web_service.user;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.hateoas.EntityModel;
@@ -9,6 +12,7 @@ import com.example.restful_web_service.exception.UserNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -35,9 +39,19 @@ public class UserResource {
         return messageSource.getMessage("good.morning.message", null, LocaleContextHolder.getLocale());
     }
 
-    @GetMapping(value = "/users")
+    @GetMapping(value = "/all-users")
     public List<User> retrieveAllUsers() {
         return userService.findAll();
+    }
+
+    @GetMapping(value = "/users-names")
+    public MappingJacksonValue  retrieveAllUsersName() {
+        List<User> users = userService.findAll();
+        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("id", "name");
+        FilterProvider filters = new SimpleFilterProvider().addFilter("userFilter", filter);
+        MappingJacksonValue mapping = new MappingJacksonValue(users);
+        mapping.setFilters(filters);
+        return  mapping;
     }
 
     @GetMapping(value = "/users/{id}")
